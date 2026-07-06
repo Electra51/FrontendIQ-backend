@@ -12,15 +12,17 @@ export const validate =
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errors = error.errors.map((err) => ({
+        // ✅ Zod 4.x: শুধু issues property আছে
+        const errors = error.issues.map((err) => ({
           field: err.path.join("."),
           message: err.message,
         }));
 
-        throw new AppError(
-          `Validation failed: ${errors.map((e) => e.message).join(", ")}`,
-          StatusCodes.BAD_REQUEST
-        );
+        const errorMessage = errors.length > 0
+          ? `Validation failed: ${errors.map((e) => e.message).join(", ")}`
+          : "Validation failed";
+
+        throw new AppError(errorMessage, StatusCodes.BAD_REQUEST);
       }
       next(error);
     }
