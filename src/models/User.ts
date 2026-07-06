@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: [true, "Full name is required"],
       trim: true,
-      minlength: [3, "Name must be at least 3 characters"],
+      minlength: [4, "Name must be at least 4 characters"],
       maxlength: [50, "Name must be less than 50 characters"],
     },
     email: {
@@ -43,7 +43,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: [true, "Password is required"],
       minlength: [8, "Password must be at least 8 characters"],
-      select: false, // Don't return password by default
+      select: false,
     },
     role: {
       type: String,
@@ -76,7 +76,7 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret) {
+      transform(doc, ret:any) {
         delete ret.password;
         delete ret.refreshToken;
         delete ret.__v;
@@ -86,20 +86,18 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-// Index for faster queries
-userSchema.index({ email: 1 });
+// ✅ Remove duplicate email index
 userSchema.index({ role: 1 });
 
-// Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+// ✅ FIXED: Remove 'next' parameter, use async/await
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
 
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
-// Compare password method
+// ✅ Compare password method
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {

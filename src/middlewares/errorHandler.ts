@@ -4,23 +4,25 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../utils/AppError";
 import { env } from "../config/env";
 
-interface ErrorResponse {
-  success: false;
-  message: string;
-  statusCode: number;
-  stack?: string;
-  errors?: any;
-}
-
 export const errorHandler = (
   err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
+  // ✅ ADD THIS: Log full error in development
+  if (env.isDevelopment) {
+    console.error("❌ ERROR:", {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+      path: req.path,
+      method: req.method,
+    });
+  }
+
   let error = err;
 
-  // If not an AppError, wrap it
   if (!(error instanceof AppError)) {
     error = new AppError(
       error.message || "Internal Server Error",
@@ -47,7 +49,7 @@ export const errorHandler = (
     );
   }
 
-  // Mongoose cast error (invalid ObjectId)
+  // Mongoose cast error
   if (err.name === "CastError") {
     error = new AppError(
       `Invalid ${err.path}: ${err.value}`,
@@ -64,13 +66,12 @@ export const errorHandler = (
     error = new AppError("Token expired", StatusCodes.UNAUTHORIZED);
   }
 
-  const response: ErrorResponse = {
+  const response: any = {
     success: false,
     message: error.message,
     statusCode: error.statusCode,
   };
 
-  // Include stack trace in development
   if (env.isDevelopment) {
     response.stack = err.stack;
   }
@@ -78,7 +79,6 @@ export const errorHandler = (
   res.status(error.statusCode).json(response);
 };
 
-// 404 Handler
 export const notFoundHandler = (
   req: Request,
   res: Response,
