@@ -23,6 +23,7 @@ export const createQuiz = async (
 
 // Get all quizzes with filters and pagination
 export const getAllQuizzes = async (filters: {
+  search?: string;
   category?: string;
   difficulty?: string;
   page?: number;
@@ -33,8 +34,16 @@ export const getAllQuizzes = async (filters: {
   const skip = (page - 1) * limit;
 
   const query: any = { isActive: true };
-  if (filters.category) query.category = filters.category.toLowerCase();
-  if (filters.difficulty) query.difficulty = filters.difficulty;
+  
+  if (filters.search) {
+    query.title = { $regex: filters.search, $options: "i" };
+  }
+  if (filters.category) {
+    query.category = filters.category; // Now expects ObjectId as string
+  }
+  if (filters.difficulty) {
+    query.difficulty = filters.difficulty;
+  }
 
   const [quizzes, total] = await Promise.all([
     Quiz.find(query)

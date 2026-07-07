@@ -1,31 +1,63 @@
-import { Router } from "express";
+// src/routes/userRoutes.ts
 
+import { Router } from "express";
 import * as UserController from "../controllers/userController";
 
 import { authenticate } from "../middlewares/auth";
 import { validate } from "../middlewares/validate";
-import { changePasswordSchema, updateProfileSchema } from "../validators/userValidator";
+import { upload } from "../middlewares/upload";
 
-
+import {
+  updateProfileSchema,
+  changePasswordSchema,
+} from "../validators/userValidator";
 
 const router = Router();
 
-// All user routes require authentication
-router.use(authenticate);
+/**
+ * GET Profile
+ */
+router.get(
+  "/me",
+  authenticate,
+  UserController.getProfile
+);
 
-// Get current user profile
-router.get("/me", UserController.getProfile);
+/**
+ * GET Dashboard Stats
+ */
+router.get(
+  "/me/dashboard",
+  authenticate,
+  UserController.getDashboardStats
+);
 
-// Update profile
+/**
+ * Update Profile
+ */
 router.patch(
   "/me",
+  authenticate,
   validate(updateProfileSchema),
   UserController.updateMyProfile
 );
 
-// Change password
+/**
+ * Upload Avatar
+ */
+router.patch(
+  "/me/avatar",
+  authenticate,
+  upload.single("avatar"),
+  UserController.uploadAvatar
+);
+
+/**
+ * Change Password
+ */
 router.patch(
   "/me/password",
+  authenticate,
   validate(changePasswordSchema),
   UserController.updatePassword
 );

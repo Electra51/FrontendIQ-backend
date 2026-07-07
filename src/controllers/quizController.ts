@@ -24,9 +24,10 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
 
 // Get all quizzes
 export const getAll = asyncHandler(async (req: Request, res: Response) => {
-  const { category, difficulty, page, limit } = req.query;
+  const { search, category, difficulty, page, limit } = req.query;
 
   const result = await getAllQuizzes({
+    search: search as string,
     category: category as string,
     difficulty: difficulty as string,
     page: page ? parseInt(page as string) : undefined,

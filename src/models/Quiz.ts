@@ -4,7 +4,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IQuiz extends Document {
   title: string;
   description: string;
-  category: string;
+  category: mongoose.Types.ObjectId;
   difficulty: "Easy" | "Medium" | "Hard" | "Mixed";
   questions: mongoose.Types.ObjectId[];
   timeLimit: number; // in minutes
@@ -32,10 +32,9 @@ const quizSchema = new Schema<IQuiz>(
       maxlength: [1000, "Description must be less than 1000 characters"],
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
-      trim: true,
-      lowercase: true,
     },
     difficulty: {
       type: String,

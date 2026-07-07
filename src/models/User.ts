@@ -8,6 +8,12 @@ export interface IUser extends Document {
   password: string;
   role: "candidate" | "admin";
   avatar?: string;
+  bio?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  portfolioUrl?: string;
+  experience?: number;
+  skills?: string[];
   isActive: boolean;
   emailVerified: boolean;
   refreshToken?: string;
@@ -52,8 +58,31 @@ const userSchema = new Schema<IUser>(
     },
     avatar: {
       type: String,
-      default: "",
-      trim: true,
+    },
+    bio: {
+      type: String,
+      maxlength: [500, "Bio cannot exceed 500 characters"],
+    },
+    githubUrl: {
+      type: String,
+      match: [/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+$/, "Please enter a valid GitHub URL"],
+    },
+    linkedinUrl: {
+      type: String,
+      match: [/^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+$/, "Please enter a valid LinkedIn URL"],
+    },
+    portfolioUrl: {
+      type: String,
+      match: [/^https?:\/\/.+$/, "Please enter a valid URL"],
+    },
+    experience: {
+      type: Number,
+      min: [0, "Experience cannot be negative"],
+      max: [50, "Experience must be realistic"],
+    },
+    skills: {
+      type: [String],
+      default: [],
     },
     isActive: {
       type: Boolean,

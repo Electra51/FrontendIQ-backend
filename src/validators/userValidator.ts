@@ -19,6 +19,39 @@ export const updateProfileSchema = z.object({
     .string()
     .url("Please enter a valid avatar URL")
     .optional(),
+
+  bio: z
+    .string()
+    .max(500, "Bio must be less than 500 characters")
+    .optional(),
+
+  githubUrl: z
+    .string()
+    .url("Please enter a valid URL")
+    .optional()
+    .or(z.literal("")),
+
+  linkedinUrl: z
+    .string()
+    .url("Please enter a valid URL")
+    .optional()
+    .or(z.literal("")),
+
+  portfolioUrl: z
+    .string()
+    .url("Please enter a valid URL")
+    .optional()
+    .or(z.literal("")),
+
+  experience: z
+    .number()
+    .min(0, "Experience cannot be negative")
+    .max(50, "Experience must be realistic")
+    .optional(),
+
+  skills: z
+    .array(z.string())
+    .optional(),
 });
 
 // ==============================
@@ -62,6 +95,12 @@ export const changePasswordSchema = z
       path: ["confirmPassword"],
     }
   );
+
+// CLOUDINARY_CLOUD_NAME: z.string(),
+
+// CLOUDINARY_API_KEY: z.string(),
+
+// CLOUDINARY_API_SECRET: z.string(),
 
 // ==============================
 // Types

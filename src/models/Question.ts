@@ -4,7 +4,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IQuestion extends Document {
   title: string;
   type: "mcq" | "coding";
-  category: string;
+  category: mongoose.Types.ObjectId;
   difficulty: "Easy" | "Medium" | "Hard";
   options?: string[];
   correctAnswer: string;
@@ -32,10 +32,9 @@ const questionSchema = new Schema<IQuestion>(
       required: true,
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
-      trim: true,
-      lowercase: true,
     },
     difficulty: {
       type: String,

@@ -36,4 +36,8 @@ export const env = {
 
   isProduction: process.env.NODE_ENV === "production",
   isDevelopment: process.env.NODE_ENV === "development",
+//cloudinary
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME!,
+cloudinaryApiKey: process.env.CLOUDINARY_API_KEY!,
+cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET!,
 };

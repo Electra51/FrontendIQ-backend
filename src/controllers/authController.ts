@@ -82,8 +82,8 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     await logoutUser(req.user.id);
   }
 
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken", COOKIE_OPTIONS);
+  res.clearCookie("refreshToken", COOKIE_OPTIONS);
 
   res.status(StatusCodes.OK).json({
     success: true,
