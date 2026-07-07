@@ -90,12 +90,3 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     message: "Logout successful",
   });
 });
-
-// Get current user
-export const getMe = asyncHandler(async (req: Request, res: Response) => {
-  const user = req.user!;
-  res.status(StatusCodes.OK).json({
-    success: true,
-    data: user,
-  });
-});

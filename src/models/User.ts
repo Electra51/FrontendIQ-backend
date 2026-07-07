@@ -50,7 +50,11 @@ const userSchema = new Schema<IUser>(
       enum: ["candidate", "admin"],
       default: "candidate",
     },
-    
+    avatar: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -73,14 +77,14 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform(doc, ret:any) {
+      transform(doc, ret: any) {
         delete ret.password;
         delete ret.refreshToken;
         delete ret.__v;
         return ret;
       },
     },
-  }
+  },
 );
 
 // ✅ Remove duplicate email index
@@ -96,7 +100,7 @@ userSchema.pre("save", async function () {
 
 // ✅ Compare password method
 userSchema.methods.comparePassword = async function (
-  candidatePassword: string
+  candidatePassword: string,
 ): Promise<boolean> {
   return await bcrypt.compare(candidatePassword, this.password);
 };
