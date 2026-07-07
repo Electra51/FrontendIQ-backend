@@ -50,10 +50,7 @@ const userSchema = new Schema<IUser>(
       enum: ["candidate", "admin"],
       default: "candidate",
     },
-    avatar: {
-      type: String,
-      default: "",
-    },
+    
     isActive: {
       type: Boolean,
       default: true,

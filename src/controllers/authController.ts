@@ -12,24 +12,13 @@ import { asyncHandler } from "../middlewares/asyncHandler";
 
 // Register user
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { user, accessToken, refreshToken } = await registerUser(req.body);
-
-  // Set cookies
-  res.cookie("accessToken", accessToken, {
-    ...COOKIE_OPTIONS,
-    maxAge: 15 * 60 * 1000, // 15 minutes
-  });
-  res.cookie("refreshToken", refreshToken, {
-    ...COOKIE_OPTIONS,
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
+  const { user } = await registerUser(req.body);
 
   res.status(StatusCodes.CREATED).json({
     success: true,
-    message: "Registration successful",
+    message: "Registration successful. Please login.",
     data: {
       user,
-      accessToken,
     },
   });
 });
