@@ -26,6 +26,7 @@ export const registerUser = async (data: RegisterInput) => {
     fullName: data.fullName,
     email: data.email,
     password: data.password,
+    role: data.role || "candidate",
   });
 
   // Generate tokens
